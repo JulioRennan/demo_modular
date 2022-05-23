@@ -69,7 +69,32 @@ Antes de entrar em detalhes sobre as funcionalidades o modular exige um preset m
 ```
 Note que **AppModule** não conhece nada sobre **HomeModule** ele apenas o define como rota inicial.
 
-##
+
+## ChildRoute
+
+Define qual vai ser o **Widget** atribuído a determinada rota. O primeiro argumento é o nome da rota e o argumento **child** é uma function que
+recebe um **BuildContext** e **ModularArguments** e deve retornar um **Widget** definido por você.
+
+Em **HomeModule** temos esse exemplo:
+
+```ChildRoute('/unauthorized', child: (_, args) => UnauthorizedPage())```
+
+com isso temos que a rota **/unauthorized/** retornara **UnauthorizedPage**.
+
+## ModuleRoute
+Define qual vai ser o **Modulo** atribuído a determinada rota. O primeiro argumento é o nome da rota e **Module** é o módulo que será definido a partir daquela rota. 
+
+Em **HomeModule** temos esse exemplo:
+
+  ```
+  ModuleRoute(
+            "/news",
+            module: NewsModule(),
+          ),
+  ```
+
+
+
 
 
 
