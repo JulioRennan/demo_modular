@@ -16,7 +16,7 @@ class HomeModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute(
-      Modular.initialRoute,
+     "/",
       child: (_, args) => HomePage(),
       children: [
         ModuleRoute(
@@ -46,7 +46,6 @@ class AuthGuard extends RouteGuard {
 
   @override
   FutureOr<bool> canActivate(String path, ParallelRoute route) {
-    print("teste==> ${Modular.args.queryParams['token']}");
     return Modular.args.queryParams['token'] != null;
   }
 }
