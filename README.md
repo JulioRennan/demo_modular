@@ -1,6 +1,21 @@
 # Flutter Modular
-Esse package tem como proposta te auxiliar a ter um projeto escalavel e com um baixo nivel de acoplamento entre camadas independente da sopa de letrinha que você estiver usando como: **MVC, MVVM, VIPER, DDD**  e assim vai. Para alcançar esse objetivo ele possui duas funcionalidades que auxiliam muito no processo: **O Sistema de Injeção de Dependência e  a Navegação via Rotas**.
+Esse package tem como proposta te auxiliar a ter um projeto escalável e com um baixo nivel de acoplamento entre camadas, independente da sopa de letrinhas que você estiver usando como: **MVC, MVVM, VIPER, DDD**  e assim vai. Para alcançar esse objetivo ele possui duas funcionalidades que auxiliam muito no processo: **O Sistema de Injeção de Dependência e  a Navegação via Rotas**.
 
+**_Para facilitar a assimilação do conhecimento é desejável que você leia esse documento com o código aberto e rodando, para você conseguir ir visualizando o que cada recurso faz de maneira mais clara._**
+
+
+Tabela de conteúdos
+=================
+<!--ts-->
+   * [**Começando o projeto**](#começando-o-projeto)
+   * [**Entendendo um Módulo**](#entendendo-um-módulo)
+   * [**Configurando rotas.**](#configurando-rotas)
+   * [**ModularArguments**: Recuperando argumentos via URL.](modularArguments)
+   * [**WildcardRoute**: Configurando o famoso **PageNotFound**.](WildcardRoute)
+   * [**RouteGuard**: Middleware de redirecionamento.](RouteGuard)
+   * [**RouterOutlet**: Widget fundamental de entender.](RouterOutlet)
+ 
+<!--te-->
 # Começando o projeto.
 Antes de entrar em detalhes sobre as funcionalidades o modular exige um preset muito simples:
   - Configurar a função  **main** em ```main.dart``` para:
@@ -41,14 +56,36 @@ Antes de entrar em detalhes sobre as funcionalidades o modular exige um preset m
       final List<ModularRoute> routes = [];
     }
     ```
- Simples não é mesmo? Apartir de agora você deve pensar no seu código como um lego de módulos. Cada Módulo tem a sua configuração, page e componentes especificos. E caso ache válido para o seu projeto, as camadas relacionadas a regras de negócio.
+ Simples não é mesmo? A partir de agora, você deve pensar no seu código como um lego de módulos. Cada Módulo tem a sua configuração, page e componentes especificos. E caso ache válido para o seu projeto, as camadas relacionadas a regras de negócio.
  
  
- # Entendendo o que é um Módulo.
- O Módulo nada mais é que um agrupamento de features com escopos semelhantes ou iguais. Cada módulo tem as  injeções de dependência, configuradas em **binds** e rotas, configurada em **routes** daquele módulo. 
+ # Entendendo um Módulo.
+ 
+ O Módulo nada mais é que um agrupamento de features com escopos semelhantes ou iguais. Cada módulo tem as injeções de dependência, configuradas em **binds** e rotas, configuradas em **routes** daquele módulo. A estrutura recomendada pelo autor é algo semelhante a isto:
+ ```
+ .                  
+├── features                                 # All features or Modules 
+│   ├─ auth                                  # Auth's MVC       
+│   │  ├── auth_model.dart   
+│   │  ├── auth_controller.dart  
+│   │  └── auth_page.dart                      
+│   ├─ home                                  # Home's MVC       
+│   │  ├── home_model.dart   
+│   │  ├── home_controller.dart  
+│   │  └── home_page.dart                        
+│   └─ product                               # Product's MVC     
+│      ├── product_model.dart   
+│      ├── product_controller.dart
+│      └── product_page.dart                    
+├── core                                     # Tools and utilities
+├── app_widget.dart                          # Main Widget containing MaterialApp 
+└── main.dart                                # runApp 
+```
+
+Nesse exemplo ele separou cada módulo no padrão **MVC**, mas não é obrigatório. Adapte de acordo com o seu projeto, mas o fundamental é: **Desenvolva baseado em escopos**.
  
  
- # Configurando as rotas.
+ # Configurando rotas.
  
  A rota inicial costuma ser **"/"**, podendo ser chamada de **Modular.initialRoute**. No exemplo a seguir a minha rota inicial será um outro módulo o **HomeModule**.
 
@@ -73,7 +110,7 @@ Note que **AppModule** não conhece nada sobre **HomeModule** ele apenas o defin
 
 ## ChildRoute
 
-Define qual vai ser o **Widget** atribuído a determinada rota. O primeiro argumento é o nome da rota e o argumento **child** é uma function que
+Define qual vai ser o **Widget** atribuído a determinada rota. O primeiro argumento é o nome da rota e o argumento **child** é uma função que
 recebe um **BuildContext** e **ModularArguments** e deve retornar um **Widget** definido por você.
 
 Em **HomeModule** temos esse exemplo:
@@ -116,7 +153,7 @@ Objeto poderoso em que você pode recuperar os **Params, QueyParams e Data** pas
      ```
 Além de estar disponível em toda definição de **ChildRoute**, também pode ser recuperado com ```Modular.args```, que retornará os argumentos da rota atual.
 
-**PS:** Esse recurso é extremamente poderoso e util para Web.
+**PS:** Esse recurso é extremamente poderoso e útil para Web.
 
 ## WildcardRoute
 Essa classe define qual vai ser o **Widget** a ser mostrado caso o usuário esteja em uma rota não definida em seu módulo. 
@@ -129,7 +166,7 @@ Em **AppModule** temos esse exemplo:
   ```
 
 ## RouteGuard
-Lembra o funcionamento de um **middleware**, mas ele apenas redireciona caso o usuário para outra rota desejada caso ele não atenda uma condição.
+Lembra o funcionamento de um **middleware**, mas ele apenas redireciona o usuário para outra rota desejada caso ele não atenda uma condição.
 Em **HomeModule** temos esse exemplo:
 
 - Definindo o **RouteGuard**
@@ -230,7 +267,7 @@ class _NavigationRailHomeState extends State<NavigationRailHome> {
     updateIndex();
     SchedulerBinding.instance?.addPersistentFrameCallback((timeStamp) {
       Modular.to.addListener(() {
-        // Toda vez que auterar a rota é necessário atualizar o index do NavigationRail, para o index selecionado.
+        // Toda vez que alterar a rota é necessário atualizar o index do NavigationRail, para o index selecionado.
         if (mounted) setState(() => updateIndex()); 
       });
     });
